@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Seat Layout</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <style>
+    .seat {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      background-color: #eee;
+      margin: 5px;
+      border-radius: 5px;
+      text-align: center;
+      line-height: 40px;
+      cursor: pointer;
+    }
+    
+    .seat.selected {
+      background-color: #55bfff;
+      color: white;
+    }
+    
+    #checkout-form {
+      display: none;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Seat Layout</h1>
+  <div id="seat-map">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="seat">1</div>
+        <div class="seat">2</div>
+        <div class="seat">3</div>
+      </div>
+      <div class="col-md-4">
+        <div class="seat">4</div>
+        <div class="seat">5</div>
+        <div class="seat">6</div>
+      </div>
+      <div class="col-md-4">
+        <div class="seat">7</div>
+        <div class="seat">8</div>
+        <div class="seat">9</div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="checkout-form">
+    <h2>Checkout</h2>
+    <form id="reservation-form" onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label htmlFor="name">Name:</label>
+        <input type="text" id="name" name="name" className="form-control" value={name} onChange={handleInputChange} />
+      </div>
+      <div className="form-group">
+        <label htmlFor="mobile">Mobile No.:</label>
+        <input type="text" id="mobile" name="mobile" className="form-control" value={mobile} onChange={handleInputChange} />
+      </div>
+      <div className="form-group">
+        <label htmlFor="city">City:</label>
+        <input type="text" id="city" name="city" className="form-control" value={city} onChange={handleInputChange} />
+      </div>
+      <div className="form-group">
+        <label htmlFor="gender">Gender:</label>
+        <select id="gender" name="gender" className="form-control" value={gender} onChange={handleInputChange}>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div className="form-group">
+        <label htmlFor="aadhar">Aadhar Card:</label>
+        <input type="text" id="aadhar" name="aadhar" className="form-control" value={aadhar} onChange={handleInputChange} />
+      </div>
+      <div className="form-group">
+        <label htmlFor="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" className="form-control" value={dob} onChange={handleInputChange} />
+      </div>
+      <div className="form-group">
+        <label htmlFor="seat-count">Number of Seats:</label>
+        <select id="seat-count" name="seat-count" className="form-control" value={seatCount} onChange={handleSeatCountChange}>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+      <div className="form-group">
+        <label htmlFor="seat-price">Seat Price:</label>
+        <input type="text" id="seat-price" name="seat-price" className="form-control" value={seatPrice} readOnly />
+      </div>
+      <button type="submit" className="btn btn-primary">Reserve Seat</button>
+    </form>
+  </div>
+  
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+  <script type="text/babel">
+    function toggleSeat() {
+      this.classList.toggle("selected");
+      document.getElementById("checkout-form").style.display = "block";
+    }
+    
+    var seats = document.getElementsByClassName("seat");
+    for (var i = 0; i < seats.length; i++) {
+      seats[i].addEventListener("click", toggleSeat);
+    }
+    
+    const [formData, setFormData] = React.useState({
+      name: '',
+      mobile: '',
+      city: '',
+      gender: 'male',
+      aadhar: '',
+      dob: '',
+      seatCount: '1',
+      seatPrice: '100'
+    });
+    
+    function handleInputChange(event) {
+      const { name, value } = event.target;
+      setFormData({ ...formData, [name]: value });
+    }
+    
+    function handleSeatCountChange(event) {
+      const selectedCount = parseInt(event.target.value);
+      const seatPrice = selectedCount * 100; // Assuming each seat costs Rs. 100
+      setFormData({ ...formData, seatCount: event.target.value, seatPrice: seatPrice.toString() });
+    }
+    
+    function handleSubmit(event) {
+      event.preventDefault();
+      
+      // Use axios to send the form data to the server
+      axios.post('/api/reservation', formData)
+        .then(response => {
+          console.log(response.data);
+          // Handle the response from the server
+        })
+        .catch(error => {
+          console.error(error);
+          // Handle errors
+        });
+    }
+  </script>
+</body>
+</html>

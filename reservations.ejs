@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reservations</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+  <h1>Reservations</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Mobile No.</th>
+        <th>City</th>
+        <th>Gender</th>
+        <th>Aadhar Card</th>
+        <th>Date of Birth</th>
+        <th>Seat Count</th>
+        <th>Seat Price</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% reservations.forEach(reservation => { %>
+        <tr>
+          <td><%= reservation.name %></td>
+          <td><%= reservation.mobile %></td>
+          <td><%= reservation.city %></td>
+          <td><%= reservation.gender %></td>
+          <td><%= reservation.aadhar %></td>
+          <td><%= reservation.dob %></td>
+          <td><%= reservation.seatCount %></td>
+          <td><%= reservation.seatPrice %></td>
+          <td><a href="/reservations/<%= reservation._id %>">View Details</a></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</body>
+</html>
